@@ -1,7 +1,7 @@
 // 공고 피드 주소. OWNER/REPO를 실제 GitHub 사용자·저장소 이름으로 바꾸세요.
 // (feed 워크플로가 feed-data 브랜치에 notices.json을 게시합니다.)
 // 바꾸기 전에는 화면 확인용 샘플 데이터가 표시됩니다.
-export const FEED_URL = "https://raw.githubusercontent.com/OWNER/REPO/feed-data/notices.json";
+export const FEED_URL = "https://raw.githubusercontent.com/kiunYou/cheongyak-helper/feed-data/notices.json";
 
 // 피드를 다시 가져오는 간격(앱을 켜 둔 동안)
 export const FEED_REFRESH_MS = 30 * 60 * 1000;
