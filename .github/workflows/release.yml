@@ -1,0 +1,41 @@
+# v0.1.0 같은 태그를 올리면 Windows 설치파일을 빌드·서명해 GitHub Release와 latest.json을 만듭니다.
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: "./src-tauri -> target"
+
+      - name: 패키지 설치
+        run: npm install
+
+      - name: 빌드 및 릴리스
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: "청약 도우미 ${{ github.ref_name }}"
+          releaseBody: "업데이트 버튼을 누르면 자동으로 설치됩니다."
+          releaseDraft: false
+          prerelease: false
+          includeUpdaterJson: true

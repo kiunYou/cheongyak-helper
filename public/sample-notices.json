@@ -1,0 +1,111 @@
+{
+ "schema": 1,
+ "generated": "2026-11-07T00:00:00+09:00",
+ "sources": {
+  "LH": {
+   "ok": true,
+   "count": 3,
+   "updated": "2026-11-07T00:00:00+09:00",
+   "error": ""
+  },
+  "SH": {
+   "ok": true,
+   "count": 3,
+   "updated": "2026-11-07T00:00:00+09:00",
+   "error": ""
+  }
+ },
+ "notices": [
+  {
+   "id": "LH-41dae203b17d",
+   "agency": "LH",
+   "kind": "분양",
+   "type": "신혼희망타운",
+   "title": "수원당수A5블록 신혼희망타운",
+   "region": "경기도",
+   "posted": "2026-10-01",
+   "closing": "2026-12-31",
+   "result": "",
+   "status": "공고중",
+   "open": true,
+   "dept": "",
+   "url": ""
+  },
+  {
+   "id": "SH-b05cdd06cb19",
+   "agency": "SH",
+   "kind": "임대",
+   "type": "청년안심주택",
+   "title": "2026년 2차 청년안심주택(공공임대) 입주자 모집공고",
+   "region": "서울특별시",
+   "posted": "2026-07-31",
+   "closing": "",
+   "result": "2026-12-11",
+   "status": "모집중",
+   "open": true,
+   "dept": "맞춤주택공급부",
+   "url": "https://housing.seoul.go.kr/site/main/sh/publicLease/view?seq=77"
+  },
+  {
+   "id": "SH-a9cb06d8e7d1",
+   "agency": "SH",
+   "kind": "임대",
+   "type": "재개발임대주택",
+   "title": "[정정] 2026년 재개발임대주택 일반모집 공고(2026. 7. 30.)",
+   "region": "서울특별시",
+   "posted": "2026-07-30",
+   "closing": "",
+   "result": "",
+   "status": "모집마감",
+   "open": false,
+   "dept": "주택공급기준부",
+   "url": ""
+  },
+  {
+   "id": "LH-0000059133",
+   "agency": "LH",
+   "kind": "분양",
+   "type": "분양주택",
+   "title": "청주지북B1블록 공공분양 잔여세대 추가 입주자모집",
+   "region": "충청북도",
+   "posted": "2026-07-16",
+   "closing": "2027-07-15",
+   "result": "",
+   "status": "공고중",
+   "open": true,
+   "dept": "",
+   "url": "https://apply.lh.or.kr/LH/index.html?gv_url=SIL::CLCC_SIL_0050.xfdl&gv_menuId=1010203&gv_param=CCR_CNNT_SYS_DS_CD:03,PAN_ID:0000059133,LCC:Y"
+  },
+  {
+   "id": "SH-ac94e55f235c",
+   "agency": "SH",
+   "kind": "임대",
+   "type": "두레주택",
+   "title": "2026-2차 충신동 두레주택 잔여세대 입주자모집공고(26. 7. 15.)",
+   "region": "서울특별시",
+   "posted": "2026-07-15",
+   "closing": "",
+   "result": "2026-09-16",
+   "status": "모집중",
+   "open": true,
+   "dept": "맞춤주택공급부",
+   "url": "https://housing.seoul.go.kr/site/main/sh/publicLease/view?seq=71"
+  },
+  {
+   "id": "LH-0000058000",
+   "agency": "LH",
+   "kind": "임대",
+   "type": "행복주택",
+   "title": "세종서창 행복주택 예비입주자 모집",
+   "region": "세종특별자치시",
+   "posted": "2026-06-25",
+   "closing": "2026-07-09",
+   "result": "",
+   "status": "공고마감",
+   "open": false,
+   "dept": "",
+   "url": "https://apply.lh.or.kr/LH/index.html?gv_param=PAN_ID:0000058000,LCC:Y"
+  }
+ ],
+ "sample": true
+}

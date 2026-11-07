@@ -1,0 +1,9 @@
+[
+ {"dsSch": [{"PG_SZ": "100", "PAGE": "1"}]},
+ {"dsList": [
+   {"RNUM": "1", "UPP_AIS_TP_NM": "분양주택", "AIS_TP_CD_NM": "분양주택", "PAN_NM": "청주지북B1블록 공공분양 잔여세대 추가 입주자모집", "CNP_CD_NM": "충청북도", "PAN_SS": "공고중", "PAN_NT_ST_DT": "2026.07.16", "CLSG_DT": "2027.07.15", "ALL_CNT": "4", "DTL_URL": "https://apply.lh.or.kr/LH/index.html?gv_url=SIL::CLCC_SIL_0050.xfdl&gv_menuId=1010203&gv_param=CCR_CNNT_SYS_DS_CD:03,PAN_ID:0000059133,LCC:Y"},
+   {"RNUM": "2", "UPP_AIS_TP_NM": "임대주택", "AIS_TP_CD_NM": "행복주택", "PAN_NM": "세종서창 행복주택 예비입주자 모집", "CNP_CD_NM": "세종특별자치시", "PAN_SS": "공고마감", "PAN_NT_ST_DT": "2026.06.25", "CLSG_DT": "2026.07.09", "ALL_CNT": "4", "DTL_URL": "https://apply.lh.or.kr/LH/index.html?gv_param=PAN_ID:0000058000,LCC:Y"},
+   {"RNUM": "3", "UPP_AIS_TP_NM": "토지", "AIS_TP_CD_NM": "토지", "PAN_NM": "단독주택용지 공급", "CNP_CD_NM": "경기도", "PAN_SS": "공고중", "PAN_NT_ST_DT": "2026.07.01", "CLSG_DT": "2026.08.01", "ALL_CNT": "4", "DTL_URL": "https://apply.lh.or.kr/x?PAN_ID:1"},
+   {"RNUM": "4", "UPP_AIS_TP_NM": "분양주택", "AIS_TP_CD_NM": "신혼희망타운", "PAN_NM": "수원당수A5블록 신혼희망타운", "CNP_CD_NM": "경기도", "PAN_SS": "공고중", "PAN_NT_ST_DT": "2026.10.01", "CLSG_DT": "2026.12.31", "ALL_CNT": "4", "DTL_URL": ""}
+ ], "resHeader": [{"SS_CODE": "Y", "RS_DTTM": "20261107050000"}]}
+]

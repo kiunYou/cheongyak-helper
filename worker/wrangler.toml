@@ -1,0 +1,9 @@
+name = "cheongyak-report"
+main = "src/index.js"
+compatibility_date = "2025-01-01"
+
+# 아래 database_id는 `npx wrangler d1 create cheongyak-report` 결과로 나온 값으로 바꾸세요.
+[[d1_databases]]
+binding = "DB"
+database_name = "cheongyak-report"
+database_id = "REPLACE-WITH-YOUR-D1-ID"

@@ -1,0 +1,12 @@
+[package]
+name = "cheongyak-admin"
+version = "0.1.0"
+description = "청약 도우미 관리자 도구: 복구 키 생성, 비밀번호 복구 승인"
+edition = "2021"
+
+[dependencies]
+crypto_box = { version = "0.9", features = ["seal"] }
+rand = "0.8"
+base64 = "0.22"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"

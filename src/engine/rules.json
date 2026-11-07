@@ -1,0 +1,219 @@
+{
+  "asOf": "2026-06-22",
+  "note": "참고용 기준입니다. 숫자는 해마다 바뀌므로 최종 판단은 반드시 해당 공고문으로 하세요. verify=true 항목은 앱 제작 시점에 원문으로 재확인하지 못한 값입니다.",
+  "incomeBase": {
+    "name": "전년도 도시근로자 가구원수별 월평균소득 100% (원)",
+    "source": "LH청약플러스 공공분양 안내(3인 이하 단일 기준표)",
+    "verify": true,
+    "bySize": {
+      "3": 7533763,
+      "4": 8802202,
+      "5": 9326985,
+      "6": 9906263,
+      "7": 10485541,
+      "8": 11064819
+    }
+  },
+  "assets": {
+    "source": "LH 2026 적용 기준",
+    "verify": true,
+    "realEstate": 215500000,
+    "vehicle": 45420000,
+    "note": "기관추천 특별공급과 전용 60㎡ 초과 일반공급에는 적용되지 않습니다."
+  },
+  "birthRelief": {
+    "since": "2023-03-28",
+    "oneChildPct": 10,
+    "twoPlusPct": 20,
+    "verify": true,
+    "note": "공고일 기준 2023.3.28 이후 출생한 자녀(또는 태아) 수에 따라 소득 기준 완화"
+  },
+  "account": {
+    "metropolitan": [
+      "서울특별시",
+      "경기도",
+      "인천광역시"
+    ],
+    "general": {
+      "strict": {
+        "months": 24,
+        "count": 24
+      },
+      "lenient": {
+        "months": 12,
+        "count": 12
+      },
+      "outside": {
+        "months": 6,
+        "count": 6
+      },
+      "verify": true,
+      "note": "투기과열지구·청약과열지역은 24개월/24회, 그 밖의 수도권 12개월/12회, 비수도권 6개월/6회"
+    }
+  },
+  "types": {
+    "신혼부부": {
+      "title": "신혼부부 특별공급",
+      "account": {
+        "months": 6,
+        "count": 6
+      },
+      "income": {
+        "single": 100,
+        "dual": 120,
+        "generalSingle": 140,
+        "generalDual": 160
+      },
+      "marriageYears": 7,
+      "singleParentChildMaxAge": 6,
+      "verify": true
+    },
+    "신생아": {
+      "title": "신생아(2세 미만 자녀) 특별공급",
+      "account": {
+        "months": 6,
+        "count": 6
+      },
+      "income": {
+        "single": 100,
+        "dual": 120,
+        "generalSingle": 140,
+        "generalDual": 160
+      },
+      "childMaxAgeYears": 2,
+      "verify": true
+    },
+    "생애최초": {
+      "title": "생애최초 특별공급",
+      "account": {
+        "months": 12,
+        "count": 12
+      },
+      "income": {
+        "single": 130,
+        "dual": 140
+      },
+      "taxYears": 5,
+      "payTotalMin": 6000000,
+      "verify": true
+    },
+    "다자녀": {
+      "title": "다자녀가구 특별공급",
+      "account": {
+        "months": 6,
+        "count": 6
+      },
+      "income": {
+        "single": 120,
+        "dual": 140
+      },
+      "minChildren": 3,
+      "verify": true
+    },
+    "노부모부양": {
+      "title": "노부모부양 특별공급",
+      "account": {
+        "months": 6,
+        "count": 6
+      },
+      "income": {
+        "single": 120,
+        "dual": 140
+      },
+      "parentMinAge": 65,
+      "supportYears": 3,
+      "verify": true
+    },
+    "기관추천": {
+      "title": "기관추천 특별공급",
+      "verify": false
+    }
+  },
+  "smallHouse": {
+    "maxArea": 20,
+    "note": "소형·저가주택은 무주택으로 보는 예외가 있어 공고문 확인이 필요합니다."
+  },
+  "noticeOverrides": {},
+  "rental": {
+    "source": "공공임대 포털(JPDC)·LH·마이홈포털 2026년 적용 기준",
+    "verify": false,
+    "urbanIncome": {
+      "bySize": {
+        "1": 3813363,
+        "2": 5866270,
+        "3": 8168429,
+        "4": 8802202,
+        "5": 9326985,
+        "6": 9906263,
+        "7": 10485541,
+        "8": 11064819
+      },
+      "extraPerPerson": 579278,
+      "note": "임대주택(국민·행복·매입·전세임대)은 공공분양과 달리 1·2·3인을 구분하는 표를 씁니다."
+    },
+    "medianIncome": {
+      "name": "2026 기준 중위소득 100% (통합공공임대·영구임대용)",
+      "verify": true,
+      "bySize": {
+        "1": 2564238,
+        "2": 4199292,
+        "3": 5359036,
+        "4": 6494738,
+        "5": 7556719
+      }
+    },
+    "assets": {
+      "general": {
+        "total": 345000000,
+        "car": 45420000,
+        "label": "총자산 3.45억·자동차 4,542만원"
+      },
+      "youth": {
+        "total": 251000000,
+        "car": 45420000,
+        "label": "청년 총자산 2.51억·자동차 4,542만원",
+        "verify": true
+      },
+      "student": {
+        "total": 108000000,
+        "car": 0,
+        "label": "대학생 총자산 1.08억·자동차 없음"
+      }
+    },
+    "national": {
+      "lt50": 50,
+      "lt60": 70,
+      "gt60": 100,
+      "verify": true
+    },
+    "permanent": {
+      "incomePct": 50,
+      "verify": true
+    },
+    "integrated": {
+      "priorityPct": 100,
+      "generalPct": 150,
+      "verify": true
+    },
+    "happy": {
+      "incomePct": 100,
+      "dualIncomePct": 120,
+      "singleHouseholdBonus": 20,
+      "twoPersonBonus": 10,
+      "youthAge": [
+        19,
+        39
+      ],
+      "elderAge": 65,
+      "marriageYears": 7,
+      "childMaxAge": 6,
+      "verify": false
+    },
+    "jeonse": {
+      "newlywedPct": 70,
+      "newlywedDualPct": 90,
+      "youthPct": 100,
+      "verify": true
+    }
+  }
+}

@@ -1,0 +1,3 @@
+CREATE TABLE IF NOT EXISTS reports (week TEXT NOT NULL, completed INTEGER NOT NULL, n INTEGER NOT NULL, PRIMARY KEY (week, completed));
+CREATE TABLE IF NOT EXISTS field_stats (week TEXT NOT NULL, field TEXT NOT NULL, status TEXT NOT NULL, n INTEGER NOT NULL, PRIMARY KEY (week, field, status));
+CREATE TABLE IF NOT EXISTS slot_stats (week TEXT NOT NULL, category TEXT NOT NULL, n INTEGER NOT NULL, PRIMARY KEY (week, category));
