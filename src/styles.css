@@ -233,3 +233,17 @@ button.picked { background: var(--accent-weak); color: var(--accent); }
 .c-info .c-mark { color: #6b7280; }
 
 .report-preview { width: 100%; max-height: 220px; overflow: auto; background: #f6f7f9; border: 1px solid var(--line); border-radius: 6px; padding: 8px; font-size: 11px; margin: 0; }
+
+/* 희망 지역 필터 */
+.region-bar { border: 1px solid var(--line); background: var(--panel); border-radius: 8px; padding: 10px 14px; margin: 10px 0; }
+.region-bar.on { border: 2px solid #e08a00; background: var(--warn-bg); }
+.region-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+.region-actions { display: flex; gap: 6px; }
+.region-panel { margin-top: 10px; }
+.region-list { list-style: none; margin: 8px 0; padding: 0; max-height: 340px; overflow-y: auto; }
+.region-list li { padding: 4px 0; border-bottom: 1px solid var(--line); }
+.region-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.region-sg { display: flex; flex-wrap: wrap; gap: 4px 14px; padding: 6px 0 6px 22px; }
+.region-hidden { border-radius: 6px; margin: 8px 0; border: 1px solid #e08a00; }
+.region-dim { opacity: 0.55; }
+.badge.region-check { background: var(--warn-bg); color: #8a5a00; }

@@ -4,6 +4,7 @@ import { api, errorMessage } from "../../api";
 import { STEPS, statFor, totalStat } from "../../profile/schema";
 import { normalize, type PersonalData } from "../../profile/types";
 import type { Feed, Notice } from "../../notices";
+import { selFromExtra, type RegionSel } from "../../regions";
 import MatchList from "../MatchList";
 import Wizard from "./Wizard";
 
@@ -19,7 +20,21 @@ export default function MyInfo({ feed, onSelect }: { feed: Feed | null; onSelect
       .catch((e) => setError(errorMessage(e)));
   }, []);
 
-  if (error) return <p className="banner error">{error}</p>;
+  async function saveRegion(sel: RegionSel): Promise<boolean> {
+    if (!data) return false;
+    const next: PersonalData = { ...data, extra: { ...data.extra, wishRegions: sel.sidos, wishSigungu: sel.sigungu }, updatedAt: new Date().toISOString() };
+    try {
+      await api.savePersonalData(next as unknown as Record<string, unknown>);
+      setData(next);
+      setError("");
+      return true;
+    } catch (e) {
+      setError(`희망 지역을 저장하지 못했습니다: ${errorMessage(e)}`);
+      return false;
+    }
+  }
+
+  if (error && !data) return <p className="banner error">{error}</p>;
   if (!data) return <p className="muted">불러오는 중…</p>;
 
   if (wizard) {
@@ -83,7 +98,8 @@ export default function MyInfo({ feed, onSelect }: { feed: Feed | null; onSelect
           )}
         </div>
       </div>
-      <MatchList data={data} feed={feed} onSelect={onSelect} />
+      {error && <p className="banner error">{error}</p>}
+      <MatchList data={data} feed={feed} onSelect={onSelect} region={selFromExtra(data.extra)} onRegionChange={saveRegion} />
     </div>
   );
 }

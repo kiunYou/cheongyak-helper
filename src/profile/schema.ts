@@ -254,7 +254,7 @@ export const EXTRA_DEFS: Def[] = [
   },
   { type: "select", key: "studentStatus", label: "대학생·취업준비생 여부", options: ["대학생", "취업준비생", "해당 없음"], why: "행복주택 계층 구분에 쓰입니다." },
   { type: "select", key: "housingForm", label: "현재 거주 형태", options: ["자가", "전세", "월세", "부모 집", "공공임대"], why: "일부 임대의 가점·우선 조건에 쓰입니다." },
-  { type: "multi", key: "wishRegions", label: "희망 지역 (목록 필터용)", options: SIDO, why: "공고 목록을 걸러 보여주는 데만 쓰이고 자격 판정에는 쓰이지 않습니다.", noUnknown: true },
+  { type: "multi", key: "wishRegions", label: "희망 지역 (목록 필터용)", options: SIDO, why: "'나에게 맞는 공고' 목록을 걸러 보여주는 데만 쓰이고 자격 판정에는 쓰이지 않습니다. 시/군/구까지 고르려면 그 탭 위쪽의 희망 지역에서 설정하세요.", noUnknown: true },
   { type: "select", key: "wishKind", label: "분양·임대 선호", options: ["분양", "임대", "둘 다"], why: "목록 필터용입니다.", noUnknown: true },
   { type: "number", key: "wishAreaMin", label: "희망 면적 최소", unit: "㎡", why: "목록 필터용입니다.", noUnknown: true },
   { type: "number", key: "wishAreaMax", label: "희망 면적 최대", unit: "㎡", why: "목록 필터용입니다.", noUnknown: true },

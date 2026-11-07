@@ -346,3 +346,38 @@ test("점검: 가상 프로필 40개 × 공고 24종 — 오류 없음, 상식�
     if (r.modeled) assert.notEqual(summarize(r).best, "가능", `${label}: 빈 프로필에 가능이 나옴`);
   }
 });
+
+// ───────── 희망 지역 필터 ─────────
+import { regionCheck, findSigungu, selFromExtra, emptySel } from "../src/regions";
+
+test("지역 필터: 꺼짐이면 전부 보임, 시·도 선택은 시·도 단위로 거름", () => {
+  const n = { region: "경기도", title: "수원당수A5블록 신혼희망타운" };
+  assert.equal(regionCheck(n, emptySel()).verdict, "match");
+  assert.equal(regionCheck(n, { sidos: ["경기도"], sigungu: [] }).verdict, "match");
+  assert.equal(regionCheck(n, { sidos: ["서울특별시", "인천광역시"], sigungu: [] }).verdict, "hidden");
+  assert.equal(regionCheck({ region: "", title: "전국 공고" }, { sidos: ["경기도"], sigungu: [] }).verdict, "unknown");
+});
+
+test("지역 필터: 시/군/구는 제목에서 찾고, 못 찾으면 숨기지 않음", () => {
+  const sel = { sidos: ["경기도"], sigungu: ["경기도 평택시", "경기도 안성시"] };
+  assert.equal(regionCheck({ region: "경기도", title: "평택시.안성시 지역 행복주택" }, sel).verdict, "match");
+  assert.equal(regionCheck({ region: "경기도", title: "화성시 국민임대" }, sel).verdict, "hidden");
+  const r = regionCheck({ region: "경기도", title: "수원당수A5블록" }, sel);
+  assert.equal(r.verdict, "hidden"); // 수원 = 수원시
+  assert.equal(regionCheck({ region: "경기도", title: "OO블록 공공분양" }, sel).verdict, "unknown");
+  assert.equal(regionCheck({ region: "경기도", title: "평택 고덕 공공분양" }, sel).verdict, "match"); // 줄임말
+});
+
+test("지역 필터: 오탐 방지(강서구≠서구, 남양주≠양주) 및 시·도 접두어 처리", () => {
+  assert.deepEqual(findSigungu("인천 강서구 공고", "인천광역시"), []);
+  assert.deepEqual(findSigungu("부산 강서구 공고", "부산광역시"), ["강서구"]);
+  assert.deepEqual(findSigungu("남양주 별내 공고", "경기도"), ["남양주시"]);
+  assert.deepEqual(findSigungu("인천계양 A6블록", "인천광역시"), ["계양구"]);
+  assert.deepEqual(findSigungu("인천시 남동구 행복주택", "인천광역시"), ["남동구"]);
+});
+
+test("지역 필터: 저장값 복원은 잘못된 값을 버림", () => {
+  const s = selFromExtra({ wishRegions: ["경기도", "없는곳"], wishSigungu: ["경기도 평택시", "서울특별시 중구", "경기도 없는시"] });
+  assert.deepEqual(s, { sidos: ["경기도"], sigungu: ["경기도 평택시"] });
+  assert.deepEqual(selFromExtra({}), { sidos: [], sigungu: [] });
+});
