@@ -247,3 +247,9 @@ button.picked { background: var(--accent-weak); color: var(--accent); }
 .region-hidden { border-radius: 6px; margin: 8px 0; border: 1px solid #e08a00; }
 .region-dim { opacity: 0.55; }
 .badge.region-check { background: var(--warn-bg); color: #8a5a00; }
+
+/* 내 정보 입력 현황 접기/펼치기 */
+.myinfo-toggle { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 12px; background: none; color: var(--text); padding: 4px 0; text-align: left; border: 0; cursor: pointer; }
+.myinfo-title { font-size: 16px; font-weight: 700; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+.myinfo-summary { font-size: 13px; font-weight: 400; color: var(--muted); }
+.myinfo-arrow { flex: none; color: var(--accent); font-size: 13px; border: 1px solid var(--line); border-radius: 999px; padding: 3px 12px; background: var(--accent-weak); }
