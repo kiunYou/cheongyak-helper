@@ -1,6 +1,8 @@
 // 개인정보 데이터 모양. 이 값은 Rust 쪽에서 암호화되어 이 PC에만 저장됩니다.
 // 모든 칸은 세 가지 상태 중 하나입니다: 값 있음 / 비어 있음(null) / 모름("unknown").
 
+import { basePlaces, normalizePlaces, type Place } from "../places";
+
 export const UNKNOWN = "unknown" as const;
 export type Unknown = typeof UNKNOWN;
 export type Rec = Record<string, unknown>;
@@ -19,6 +21,7 @@ export type PersonalData = {
   account: Rec; // 청약통장
   extra: Rec; // 특공 추가, 임대용 추가, 희망 조건
   slotReports: { category: string; at: string }[]; // "입력할 칸이 없어요" 분류 기록(개인정보 아님)
+  places: Place[]; // 내 장소(집·회사 + 추가 최대 4개): 이름과 주소 글자만
 };
 
 export function emptyData(): PersonalData {
@@ -36,6 +39,7 @@ export function emptyData(): PersonalData {
     account: {},
     extra: {},
     slotReports: [],
+    places: basePlaces(),
   };
 }
 
@@ -67,6 +71,7 @@ export function normalize(raw: Record<string, unknown> | null | undefined): Pers
           (r) => r && typeof r.category === "string" && typeof r.at === "string",
         )
       : [],
+    places: normalizePlaces(raw.places),
   };
 }
 

@@ -381,3 +381,45 @@ test("지역 필터: 저장값 복원은 잘못된 값을 버림", () => {
   assert.deepEqual(s, { sidos: ["경기도"], sigungu: ["경기도 평택시"] });
   assert.deepEqual(selFromExtra({}), { sidos: [], sigungu: [] });
 });
+
+// ───────── 카카오 길찾기 도우미 ─────────
+import { cleanTitle, noticeQueries, routeUrl, searchUrl } from "../src/kakao";
+import { normalizePlaces } from "../src/places";
+
+test("공고 제목에서 단지·지명만 남김", () => {
+  assert.equal(cleanTitle("수원당수A5블록 신혼희망타운"), "수원당수A5블록");
+  assert.equal(cleanTitle("청주지북B1블록 공공분양 잔여세대 추가 입주자모집"), "청주지북B1블록");
+  assert.equal(cleanTitle("구로구 도전숙(수요자맞춤형) 잔여세대 입주자 모집 공고"), "구로구 도전숙");
+  assert.equal(cleanTitle("2026-2차 충신동 두레주택 잔여세대 입주자모집공고(26. 7. 15.)"), "충신동 두레주택");
+  assert.equal(cleanTitle("2026년 3차 희망하우징(공공기숙사) 잔여세대 입주자 모집공고(2026. 10. 28.)"), "");
+  assert.equal(cleanTitle("[정정] 2026년 재개발임대주택 일반모집 공고(2026. 7. 30.)"), "");
+});
+
+test("소재지 검색어: 단지 → 시/군/구 → 시·도 순서", () => {
+  const q = noticeQueries({ region: "경기도", title: "평택시.안성시 지역 행복주택 예비입주자 모집" });
+  assert.deepEqual(q.map((x) => x.level), ["단지", "시군구", "시도"]);
+  assert.equal(q[1].query, "경기도 평택시");
+  const r = noticeQueries({ region: "서울특별시", title: "2026년 3차 희망하우징(공공기숙사) 잔여세대 입주자 모집공고" });
+  assert.deepEqual(r.map((x) => x.level), ["시도"]);
+  assert.deepEqual(noticeQueries({ region: "", title: "" }), []);
+});
+
+test("길찾기 링크와 검색 링크", () => {
+  const u = routeUrl("traffic", { name: "집,방", lat: 37.5, lng: 127.1 }, { name: "단지/A", lat: 37.4, lng: 127.2 });
+  assert.equal(u, "https://map.kakao.com/link/by/traffic/%EC%A7%91%20%EB%B0%A9,37.5,127.1/%EB%8B%A8%EC%A7%80%20A,37.4,127.2");
+  assert.equal(searchUrl("서울 강남"), "https://map.kakao.com/link/search/%EC%84%9C%EC%9A%B8%20%EA%B0%95%EB%82%A8");
+});
+
+test("내 장소: 집·회사 고정, 추가는 4개까지, 잘못된 값은 버림", () => {
+  const base = normalizePlaces(undefined);
+  assert.deepEqual(base.map((p) => p.id), ["home", "work"]);
+  const many = normalizePlaces([
+    { id: "work", name: "x", address: "서울 중구" }, { id: "a", name: "부모님 댁", address: "수원" }, { id: "a", name: "중복", address: "" },
+    { id: "b", name: "", address: "" }, "bad", null,
+    ...["c", "d", "e", "f"].map((id) => ({ id, name: id, address: "" })),
+  ]);
+  assert.equal(many.length, 6);
+  assert.equal(many[1].address, "서울 중구");
+  assert.equal(many[1].name, "회사");
+  assert.deepEqual(many.slice(2).map((p) => p.id), ["a", "c", "d", "e"]);
+});

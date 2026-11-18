@@ -6,6 +6,7 @@ import { evaluateNotice } from "../engine/evaluate";
 import { buildGuide } from "../engine/guide";
 import { dateLabel, type Notice } from "../notices";
 import { normalize, type PersonalData } from "../profile/types";
+import RoutePanel from "./RoutePanel";
 
 const MARK = { ok: "✔", fail: "✖", unknown: "?", info: "ⓘ" } as const;
 
@@ -74,6 +75,7 @@ export default function NoticeGuide({ notice }: { notice: Notice | null }) {
         <p className="muted">이 공고는 원문 주소가 제공되지 않았습니다. 해당 기관 홈페이지에서 공고명을 검색하세요.</p>
       )}
       {err && <p className="banner error">{err}</p>}
+      <RoutePanel notice={notice} data={data} onDataChange={setData} />
       {dataErr && <p className="banner error">내 정보를 불러오지 못했습니다: {dataErr}</p>}
       {result && !result.modeled && <p className="banner info">{result.reason}</p>}
       {result && result.refAssumed && <p className="muted small">공고 게시일이 없어 오늘 날짜를 기준일로 썼습니다.</p>}

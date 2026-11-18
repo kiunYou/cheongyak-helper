@@ -6,6 +6,7 @@ import { normalize, type PersonalData } from "../../profile/types";
 import type { Feed, Notice } from "../../notices";
 import { selFromExtra, type RegionSel } from "../../regions";
 import MatchList from "../MatchList";
+import PlacesEditor, { persistPlaces } from "../PlacesEditor";
 import Wizard from "./Wizard";
 
 /** 접힌 상태에서 보여줄 한 줄 요약. 값이 있는 항목만 씁니다(모름·빈 칸은 뺌). */
@@ -30,6 +31,7 @@ export default function MyInfo({ feed, onSelect }: { feed: Feed | null; onSelect
   const [data, setData] = useState<PersonalData | null>(null);
   const [error, setError] = useState("");
   const [wizard, setWizard] = useState<{ start: number } | null>(null);
+  const [placesOpen, setPlacesOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(true); // 탭을 열면 접힌 상태로 시작
 
   useEffect(() => {
@@ -130,6 +132,22 @@ export default function MyInfo({ feed, onSelect }: { feed: Feed | null; onSelect
               )}
             </div>
           </>
+        )}
+      </div>
+      <div className="card wide places-card">
+        <button type="button" className="myinfo-toggle" aria-expanded={placesOpen} onClick={() => setPlacesOpen((v) => !v)}>
+          <span className="myinfo-title">
+            📍 내 장소 (길찾기용)
+            <span className="myinfo-summary">{data.places.filter((p) => p.address).map((p) => p.name).join(" · ") || "설정된 장소 없음"}</span>
+          </span>
+          <span className="myinfo-arrow">{placesOpen ? "접기 ▲" : "설정 ▼"}</span>
+        </button>
+        {placesOpen && (
+          <PlacesEditor
+            places={data.places}
+            onSave={async (p) => setData(await persistPlaces(data, p))}
+            onClose={() => setPlacesOpen(false)}
+          />
         )}
       </div>
       {error && <p className="banner error">{error}</p>}

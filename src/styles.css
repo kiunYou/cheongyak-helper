@@ -253,3 +253,20 @@ button.picked { background: var(--accent-weak); color: var(--accent); }
 .myinfo-title { font-size: 16px; font-weight: 700; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
 .myinfo-summary { font-size: 13px; font-weight: 400; color: var(--muted); }
 .myinfo-arrow { flex: none; color: var(--accent); font-size: 13px; border: 1px solid var(--line); border-radius: 999px; padding: 3px 12px; background: var(--accent-weak); }
+
+/* 내 장소 · 길찾기 */
+.places-card { margin-top: 0; }
+.places-list { list-style: none; margin: 8px 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.place-row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.place-name { width: 90px; flex: none; }
+.place-name-input { width: 120px; flex: none; }
+.place-addr { flex: 1; min-width: 220px; }
+.place-hits { display: flex; flex-direction: column; gap: 4px; margin: 6px 0 0 96px; }
+.place-hit { display: flex; flex-direction: column; align-items: flex-start; text-align: left; background: var(--panel); color: var(--text); border: 1px solid var(--line); border-radius: 6px; padding: 6px 10px; cursor: pointer; }
+.place-hit:hover { background: var(--accent-weak); }
+.route-panel { width: 100%; border: 1px solid var(--line); background: var(--panel); border-radius: 8px; padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; }
+.route-panel h3 { margin: 0; font-size: 15px; }
+.dest-list { list-style: none; margin: 4px 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.dest-search { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 6px; }
+.dest-search input { flex: 1; min-width: 200px; }
+.route-buttons { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0; }

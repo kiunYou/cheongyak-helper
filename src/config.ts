@@ -9,3 +9,7 @@ export const FEED_REFRESH_MS = 30 * 60 * 1000;
 // 주간 익명 통계를 받는 Cloudflare Worker 주소. 배포 후 실제 주소로 바꾸세요(worker/README.md 참고).
 // YOUR-가 들어 있는 동안에는 아무것도 전송하지 않습니다.
 export const REPORT_URL = "https://YOUR-WORKER.YOUR-SUBDOMAIN.workers.dev/report";
+
+// 카카오 REST API 키(주소·장소 검색용). 카카오디벨로퍼스에서 발급해 따옴표 안에 붙여 넣으세요(SETUP.md 참고).
+// 비어 있으면 주소 검색 없이 직접 입력과 카카오맵 검색 링크만 쓸 수 있습니다.
+export const KAKAO_REST_KEY = "588e735317821597714ca86db3cc868d";
