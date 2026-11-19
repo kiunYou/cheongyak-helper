@@ -423,3 +423,17 @@ test("내 장소: 집·회사 고정, 추가는 4개까지, 잘못된 값은 버
   assert.equal(many[1].name, "회사");
   assert.deepEqual(many.slice(2).map((p) => p.id), ["a", "c", "d", "e"]);
 });
+
+test("어린이집 공고 제목 정리와 지역 우선 정렬", async () => {
+  const { cleanTitle: ct, preferRegion } = await import("../src/kakao");
+  assert.equal(ct("위례 A2-7블록 신혼희망타운 행복주택 가정어린이집 운영예정자 모집공고"), "위례 A2-7블록");
+  const hits = [{ address: "서울 송파구 위례성대로 1" }, { address: "경기 성남시 수정구 창곡동 514" }, { address: "경기 하남시 위례동" }];
+  assert.deepEqual(preferRegion(hits, "경기도").map((h) => h.address), ["경기 성남시 수정구 창곡동 514", "경기 하남시 위례동", "서울 송파구 위례성대로 1"]);
+  assert.equal(preferRegion(hits, "").length, 3);
+});
+
+test("소재지 주소가 있으면 검색어 맨 앞에 둠", () => {
+  const q = noticeQueries({ region: "경기도", title: "위례 A2-7블록 행복주택", addresses: ["경기도 성남시 수정구 창곡동 514"] });
+  assert.deepEqual(q[0], { query: "경기도 성남시 수정구 창곡동 514", level: "주소" });
+  assert.equal(q[1].level, "단지");
+});

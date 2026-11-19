@@ -1,6 +1,7 @@
 // 카카오 로컬 API(주소·장소 검색)와 카카오맵 길찾기 링크.
 // 외부로 나가는 것은 검색어(주소·단지명)를 카카오에 보내는 요청뿐입니다.
 import { KAKAO_REST_KEY } from "./config";
+import { sidoOf } from "./engine/engine";
 import { findSigungu } from "./regions";
 
 export type Hit = { name: string; address: string; lat: number; lng: number };
@@ -101,7 +102,7 @@ export async function locate(address: string): Promise<Hit | null> {
 // ───────── 공고 소재지 추정 ─────────
 const DROP_WORDS = [
   "입주자 모집공고", "입주자모집공고", "예비입주자", "입주자 모집", "입주자모집", "잔여세대", "모집공고", "신혼희망타운", "청년안심주택",
-  "재개발임대주택", "통합공공임대", "국민임대", "영구임대", "공공임대", "공공분양", "행복주택", "희망하우징", "신혼부부", "일반모집", "추가", "정정", "모집", "공고", "분양", "일반",
+  "재개발임대주택", "통합공공임대", "국민임대", "영구임대", "공공임대", "공공분양", "행복주택", "희망하우징", "신혼부부", "일반모집", "가정어린이집", "국공립어린이집", "어린이집", "운영예정자", "운영자", "추가", "정정", "모집", "공고", "분양", "일반",
 ];
 
 /** 공고 제목에서 단지·지명 부분만 남깁니다. 남는 게 없으면 빈 글자. */
@@ -112,11 +113,12 @@ export function cleanTitle(title: string): string {
   return t.replace(/[.,·]+/g, " ").replace(/\s+/g, " ").trim();
 }
 
-export type DestQuery = { query: string; level: "단지" | "시군구" | "시도" };
+export type DestQuery = { query: string; level: "주소" | "단지" | "시군구" | "시도" };
 
 /** 위치 검색에 쓸 검색어를 정확한 것부터 순서대로 만듭니다. */
-export function noticeQueries(n: { region: string; title: string }): DestQuery[] {
+export function noticeQueries(n: { region: string; title: string; addresses?: string[] }): DestQuery[] {
   const out: DestQuery[] = [];
+  for (const a of n.addresses ?? []) if (a.trim()) out.push({ query: a.trim(), level: "주소" });
   const region = (n.region || "").trim();
   const core = cleanTitle(n.title || "");
   if (core.length >= 2) out.push({ query: `${region} ${core}`.trim(), level: "단지" });
@@ -144,3 +146,12 @@ export function routeUrl(mode: Mode, from: { name: string; lat: number; lng: num
 
 /** 키가 없거나 위치를 못 찾을 때 쓰는 카카오맵 검색 링크 */
 export const searchUrl = (q: string) => `https://map.kakao.com/link/search/${encodeURIComponent(q.trim())}`;
+
+/** 검색 결과 중 공고의 시·도에 속한 곳을 앞에 둡니다(같은 지명이 여러 지역에 있을 때 오탐을 줄임). 순서는 유지합니다. */
+export function preferRegion<T extends { address: string }>(hits: T[], region: string): T[] {
+  const sido = sidoOf(region || "");
+  if (!sido) return hits;
+  const inside = hits.filter((h) => sidoOf(h.address) === sido);
+  if (inside.length === 0) return hits;
+  return [...inside, ...hits.filter((h) => sidoOf(h.address) !== sido)];
+}

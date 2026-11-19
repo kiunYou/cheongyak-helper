@@ -1,7 +1,7 @@
 // 공고 소재지까지 카카오맵 길찾기. 도착지는 후보 중에서 사용자가 고르고, 출발지는 내 장소를 고릅니다.
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { useEffect, useState } from "react";
-import { friendly, hasKey, locate, MODES, noticeQueries, routeUrl, searchPlaces, searchUrl, type DestQuery, type Hit, type Mode } from "../kakao";
+import { friendly, hasKey, locate, MODES, noticeQueries, routeUrl, preferRegion, searchPlaces, searchUrl, type DestQuery, type Hit, type Mode } from "../kakao";
 import type { Notice } from "../notices";
 import type { PersonalData } from "../profile/types";
 import PlacesEditor, { persistPlaces } from "./PlacesEditor";
@@ -21,8 +21,18 @@ export default function RoutePanel({ notice, data, onDataChange }: { notice: Not
     setDest({ hits: [], level: null, msg: "", loading: true });
     setPick(0);
     try {
-      for (const q of queries) {
-        const hits = await searchPlaces(q.query);
+      // 공고 상세 페이지의 소재지가 있으면 단지마다 첫 결과를 모아 후보로 보여줍니다.
+      const exact: Hit[] = [];
+      for (const q of queries.filter((x) => x.level === "주소")) {
+        const first = (await searchPlaces(q.query))[0];
+        if (first) exact.push({ ...first, name: first.name === first.address ? q.query : first.name });
+      }
+      if (exact.length) {
+        setDest({ hits: exact.slice(0, 5), level: "주소", msg: "", loading: false });
+        return;
+      }
+      for (const q of queries.filter((x) => x.level !== "주소")) {
+        const hits = preferRegion(await searchPlaces(q.query), notice.region);
         if (hits.length) {
           setDest({ hits, level: q.level, msg: "", loading: false });
           return;
@@ -88,7 +98,7 @@ export default function RoutePanel({ notice, data, onDataChange }: { notice: Not
         {dest.hits.length > 0 && (
           <>
             <p className="muted small">
-              {dest.level === "단지" ? "공고 제목에서 찾은 후보입니다. 맞는 위치를 고르세요." : dest.level === "시군구" ? "단지를 찾지 못해 시/군/구 위치로 찾았습니다. 대략적인 위치입니다." : "단지를 찾지 못해 시·도 대표 위치로 찾았습니다. 매우 대략적입니다."} 정확한 단지 위치는 공고문으로 확인하세요.
+              {dest.level === "주소" ? "공고 상세 페이지의 소재지로 찾았습니다." : dest.level === "단지" ? "공고 제목에서 찾은 후보입니다. 맞는 위치를 고르세요." : dest.level === "시군구" ? "단지를 찾지 못해 시/군/구 위치로 찾았습니다. 대략적인 위치입니다." : "단지를 찾지 못해 시·도 대표 위치로 찾았습니다. 매우 대략적입니다."} 정확한 단지 위치는 공고문으로 확인하세요.
             </p>
             <ul className="dest-list">
               {dest.hits.slice(0, 5).map((h, i) => (

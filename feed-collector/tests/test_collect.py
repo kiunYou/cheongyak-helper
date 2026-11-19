@@ -120,5 +120,55 @@ class Merge(unittest.TestCase):
         self.assertEqual(collect.comparable(a), collect.comparable(b))
 
 
+LH_DETAIL = """
+<ul><li>공급정보</li><li>접수처정보</li></ul>
+<h3>공급정보</h3><h4>위례A2-7블록 행복주택 가정어린이집</h4>
+<ul><li>소재지 : 경기도 성남시 수정구 창곡동 514</li><li>전용면적(㎡) : 55.81~55.99</li></ul>
+<h4>위례A2-8블록</h4><ul><li>소재지&nbsp;:&nbsp;경기도 하남시 학암동 1</li></ul>
+<h3>접수처정보</h3><ul><li>소재지 : 경기도 성남시 분당구 성남대로54번길 3(구미동) 한국토지주택공사 경기남부지역본부</li></ul>
+<script>var x = "소재지 : 가짜";</script>
+"""
+
+
+class LhAddress(unittest.TestCase):
+    def test_extract_skips_desk_and_script(self):
+        self.assertEqual(collect.extract_addresses(LH_DETAIL), ["경기도 성남시 수정구 창곡동 514", "경기도 하남시 학암동 1"])
+
+    def test_none_when_absent(self):
+        self.assertEqual(collect.extract_addresses("<p>소재지 없음</p>"), [])
+
+    def test_enrich_reuses_previous_and_limits(self):
+        base = {"agency": "LH", "open": True, "posted": "2026-10-01", "url": "https://apply.lh.or.kr/x?panId="}
+        notices = [dict(base, id=f"LH-{i}", url=base["url"] + str(i)) for i in range(5)]
+        notices.append(dict(base, id="SH-1", agency="SH", url="https://housing.seoul.go.kr/a"))
+        previous = [{"id": "LH-0", "addresses": ["A"]}, {"id": "LH-1", "addresses": []}]
+        calls = []
+
+        def fake(url):
+            calls.append(url)
+            return LH_DETAIL
+
+        got = collect.enrich_addresses(notices, previous, fetch=fake, limit=2, sleep=0)
+        self.assertEqual(got, 2)
+        self.assertEqual(len(calls), 2)  # 이전 결과가 있는 2건과 SH는 읽지 않음
+        by = {n["id"]: n for n in notices}
+        self.assertEqual(by["LH-0"]["addresses"], ["A"])
+        self.assertEqual(by["LH-1"]["addresses"], [])
+        self.assertNotIn("addresses", by["SH-1"])
+        self.assertEqual(sum("addresses" in n for n in notices), 4)  # 재사용 2 + 새로 2
+
+    def test_stops_after_consecutive_failures(self):
+        notices = [{"id": f"LH-{i}", "agency": "LH", "open": True, "posted": "2026-10-01", "url": f"https://apply.lh.or.kr/x{i}"} for i in range(10)]
+        calls = []
+
+        def boom(url):
+            calls.append(url)
+            raise RuntimeError("blocked")
+
+        self.assertEqual(collect.enrich_addresses(notices, [], fetch=boom, limit=10, sleep=0), 0)
+        self.assertEqual(len(calls), collect.ADDR_STOP_AFTER_FAILS)
+        self.assertFalse(any("addresses" in n for n in notices))
+
+
 if __name__ == "__main__":
     unittest.main()

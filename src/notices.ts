@@ -15,6 +15,7 @@ export type Notice = {
   open: boolean;
   dept: string;
   url: string;
+  addresses?: string[]; // LH 상세 페이지의 단지 소재지(있을 때만)
 };
 
 export type SourceStatus = { ok: boolean; count: number; updated: string; error: string };

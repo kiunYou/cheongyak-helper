@@ -21,6 +21,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from datetime import datetime, timedelta, timezone
+import html as htmllib
 from html.parser import HTMLParser
 
 SCHEMA = 1
@@ -292,6 +293,60 @@ def collect_sh() -> list[dict]:
     return list(seen.values())
 
 
+# ───────────────────────── LH 소재지(상세 페이지) ─────────────────────────
+ADDR_PER_RUN = 40  # 한 번 실행에서 상세 페이지를 읽는 최대 건수(나머지는 다음 실행에서)
+ADDR_SLEEP = 1.2  # 상세 페이지 사이 대기(초): 서버에 부담을 주지 않도록
+ADDR_STOP_AFTER_FAILS = 4  # 연속 실패가 이만큼이면 차단·점검으로 보고 이번 실행에서는 중단
+LH_DETAIL_HOST = "https://apply.lh.or.kr/"
+
+
+def extract_addresses(page: str) -> list[str]:
+    """상세 페이지에서 단지 '소재지 : …'만 뽑습니다. 접수처 정보의 소재지(상담실 주소)는 제외합니다."""
+    t = re.sub(r"(?is)<(script|style)\b.*?</\1>", " ", page)
+    t = re.sub(r"(?i)<br\s*/?>|</(li|p|div|tr|td|th|h\d|dd|dt|ul|ol|table)>", "\n", t)
+    t = htmllib.unescape(re.sub(r"<[^>]+>", " ", t))
+    out: list[str] = []
+    for m in re.finditer(r"소재지\s*[:：]\s*([^\n]+)", t):
+        before = t[: m.start()]
+        # 가장 가까운 앞쪽 제목이 접수처정보면 상담실 주소이므로 건너뜀
+        pos_supply, pos_desk = before.rfind("공급정보"), before.rfind("접수처정보")
+        if pos_desk > pos_supply:
+            continue
+        addr = clean(m[1])[:120]
+        if not addr or "지역본부" in addr or "한국토지주택공사" in addr:
+            continue
+        if addr not in out:
+            out.append(addr)
+        if len(out) >= 6:
+            break
+    return out
+
+
+def enrich_addresses(notices: list[dict], previous: list[dict], fetch=http_get, limit: int = ADDR_PER_RUN, sleep: float = ADDR_SLEEP) -> int:
+    """LH 공고에 소재지(addresses)를 붙입니다. 이미 읽은 공고는 직전 결과를 재사용하고, 새 공고만 읽습니다.
+    실패해도 수집 전체는 계속됩니다(소재지가 없는 공고는 앱이 제목으로 위치를 추정)."""
+    prev = {n.get("id"): n.get("addresses") for n in previous if isinstance(n, dict) and isinstance(n.get("addresses"), list)}
+    todo: list[dict] = []
+    for n in notices:
+        if n.get("id") in prev:
+            n["addresses"] = prev[n["id"]]
+        elif n.get("agency") == "LH" and str(n.get("url", "")).startswith(LH_DETAIL_HOST):
+            todo.append(n)
+    todo.sort(key=lambda n: (not n.get("open"), -int(n.get("posted", "0").replace("-", "") or 0)))
+    done = fails = 0
+    for n in todo[:limit]:
+        try:
+            n["addresses"] = extract_addresses(fetch(n["url"]))
+            done += 1
+            fails = 0
+        except Exception:  # noqa: BLE001 - 한 건 실패는 건너뜀(다음 실행에서 다시 시도)
+            fails += 1
+            if fails >= ADDR_STOP_AFTER_FAILS:
+                break
+        time.sleep(sleep)
+    return done
+
+
 # ───────────────────────── 합치기 ─────────────────────────
 def load_previous(path: str) -> dict:
     try:
@@ -353,6 +408,11 @@ def main() -> int:
     else:
         try:
             lh = collect_lh(key)
+            try:
+                got = enrich_addresses(lh, previous.get("notices", []) if isinstance(previous.get("notices"), list) else [])
+                print(f"LH 소재지: 새로 읽은 공고 {got}건")
+            except Exception as e:  # noqa: BLE001 - 소재지 실패는 수집 실패로 보지 않음
+                print(f"LH 소재지 수집 건너뜀: {e}")
         except Exception as e:  # noqa: BLE001 - 어떤 실패든 이전 결과 유지
             errors["LH"] = str(e)
     if not args.skip_sh:
